@@ -16,6 +16,7 @@ let elapsedTime = 0;
 let timerInterval;
 let isFlipping = false;
 let isTimerRunning = false;
+const screamSound = new Audio('css/scream.mp4');
 
 const timerElement = document.getElementById("timer");
 
@@ -127,9 +128,25 @@ function checkWin() {
             isGameWon = true;
             isTimerRunning = false;
             document.querySelector('.memory-game').classList.add('animate__animated', 'animate__heartBeat');
+
+            // Muestra el video de scream a pantalla completa
+            const screamVideo = document.getElementById('scream-video') || document.createElement('video');
+            screamVideo.src = 'css/scream.mp4';
+            screamVideo.classList.add('fullscreen-video');
+            screamVideo.autoplay = true;
+            screamVideo.muted = false; // Si quieres que suene el audio
+            screamVideo.style.display = 'block';
+            
+            document.body.appendChild(screamVideo);
+
+            // Oculta el video al terminar
+            screamVideo.onended = () => {
+                screamVideo.style.display = 'none';
+            };
         }, 500);
     }
 }
+
 
 
 function startTimer() {

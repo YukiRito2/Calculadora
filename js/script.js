@@ -43,6 +43,8 @@ function flipCard(cardElement, card) {
 
     const cardFront = cardElement.querySelector('.card-front');
     cardFront.classList.toggle('hidden');
+    cardElement.classList.add('animate__animated', 'animate__flipInY'); // Añadir animación
+
     cardElement.classList.add('flipped');
     selectedCardElements.push(cardElement);
     selectedCards.push(card);
@@ -124,9 +126,11 @@ function checkWin() {
             backgroundAudio.pause();
             isGameWon = true;
             isTimerRunning = false;
+            document.querySelector('.memory-game').classList.add('animate__animated', 'animate__heartBeat');
         }, 500);
     }
 }
+
 
 function startTimer() {
     startTime = new Date().getTime();

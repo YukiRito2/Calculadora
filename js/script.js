@@ -1,9 +1,3 @@
-/* const cards = [
-    '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
-    '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧'
-];
-*/
-
 const cards = [
     '🐶', '🐱', '🐭', '🐹'
 ];
@@ -16,14 +10,13 @@ let elapsedTime = 0;
 let timerInterval;
 let isFlipping = false;
 let isTimerRunning = false;
-const screamSound = new Audio('css/scream.mp4');
 
 const timerElement = document.getElementById("timer");
 
 function createCardElement(card) {
     const cardElement = document.createElement('div');
     cardElement.classList.add('card');
-    cardElement.innerHTML = `<div class="card-front">${card}</div><div class="card-back"></div>`;
+    cardElement.innerHTML = `<div class="card-front">${card}</div><div class="card-back"></div>`; // Corrección de sintaxis
     cardElement.addEventListener('click', () => flipCard(cardElement, card));
     return cardElement;
 }
@@ -44,7 +37,12 @@ function flipCard(cardElement, card) {
 
     const cardFront = cardElement.querySelector('.card-front');
     cardFront.classList.toggle('hidden');
-    cardElement.classList.add('animate__animated', 'animate__flipInY'); // Añadir animación
+    cardElement.classList.add('animate__animated', 'animate__flipInY'); // Añadir animación de flip
+
+    // Evento para eliminar las clases de animación después de la animación de giro
+    cardElement.addEventListener('animationend', () => {
+        cardElement.classList.remove('animate__animated', 'animate__flipInY');
+    }, { once: true });
 
     cardElement.classList.add('flipped');
     selectedCardElements.push(cardElement);
@@ -53,8 +51,7 @@ function flipCard(cardElement, card) {
 
     if (selectedCards.length === 2) {
         isFlipping = true;
-        setTimeout(checkMatch, 500);
-        backgroundAudio.play();
+        setTimeout(checkMatch, 200);
     }
 
     if (selectedCards.length === 1 && !isTimerRunning) {
@@ -62,6 +59,7 @@ function flipCard(cardElement, card) {
         startTimer();
     }
 }
+
 
 const matchSound = new Audio('css/mp3/mario-coin.mp3');
 
@@ -91,7 +89,7 @@ function checkMatch() {
             card2.classList.remove('flipped');
             selectedCardElements = [];
             selectedCards = [];
-        }, 90);
+        }, 500);
     }
     isFlipping = false;
 }
@@ -106,7 +104,6 @@ function restartGame() {
     elapsedTime = 0;
     isGameWon = false;
     isTimerRunning = false;
-    location.reload();
     const grid = document.querySelector('.grid');
     grid.innerHTML = '';
     selectedCardElements = [];
@@ -128,26 +125,9 @@ function checkWin() {
             isGameWon = true;
             isTimerRunning = false;
             document.querySelector('.memory-game').classList.add('animate__animated', 'animate__heartBeat');
-
-            // Muestra el video de scream a pantalla completa
-            const screamVideo = document.getElementById('scream-video') || document.createElement('video');
-            screamVideo.src = 'css/scream.mp4';
-            screamVideo.classList.add('fullscreen-video');
-            screamVideo.autoplay = true;
-            screamVideo.muted = false; // Si quieres que suene el audio
-            screamVideo.style.display = 'block';
-            
-            document.body.appendChild(screamVideo);
-
-            // Oculta el video al terminar
-            screamVideo.onended = () => {
-                screamVideo.style.display = 'none';
-            };
         }, 500);
     }
 }
-
-
 
 function startTimer() {
     startTime = new Date().getTime();
